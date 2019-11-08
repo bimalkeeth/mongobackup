@@ -11,33 +11,31 @@ import (
 
 func main() {
 
-	ses:=session.Must(session.NewSessionWithOptions(session.Options{
-		Config:                  aws.Config{Region:aws.String("ap-southeast-2")},
-		SharedConfigState:       session.SharedConfigEnable,
+	ses := session.Must(session.NewSessionWithOptions(session.Options{
+		Config:            aws.Config{Region: aws.String("ap-southeast-2")},
+		SharedConfigState: session.SharedConfigEnable,
 	}))
-	cred:=credentials.NewStaticCredentials("AKIARWXENY46J4XV2HOS","9zDEqfJw+F6lGDda5uV0dvk9/MSr+x5mmVKnszhd","")
-	credent,err:=cred.Get()
-	if err!=nil{
+	cred := credentials.NewStaticCredentials("AKIARWXENY46J4XV2HOS", "9zDEqfJw+F6lGDda5uV0dvk9/MSr+x5mmVKnszhd", "")
+	_, err := cred.Get()
+	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Value of credentials : ", credent)
-    svc:=ec2.New(ses,&aws.Config{Credentials:cred})
+	svc := ec2.New(ses, &aws.Config{Credentials: cred})
 
 	params := &ec2.DescribeInstancesInput{
 		Filters: []*ec2.Filter{
 			{
 				Name: aws.String("tag:Name"),
 				Values: []*string{
-					aws.String(strings.Join([]string{"*", ".", "*"}, "")),
+					aws.String(strings.Join([]string{"*", "PdfParser", "*"}, "")),
 				},
 			},
 		},
 	}
 	resp, err := svc.DescribeInstances(params)
-	if err!=nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(resp)
-
 
 }
