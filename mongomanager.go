@@ -6,7 +6,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"log"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -36,6 +38,26 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(resp)
+
+	dd := "Image_Mongo" + time.Now().Format("2006_01_02_15_04_05")
+	fmt.Println(dd)
+	for _, item := range resp.Reservations {
+
+		for _, instance := range item.Instances {
+			input := &ec2.CreateImageInput{
+				Description: aws.String("Image creation test"),
+				InstanceId:  instance.InstanceId,
+				Name:        aws.String("Image_Mongo" + time.Now().Format("2006_01_02_15_04_05")),
+				NoReboot:    aws.Bool(true),
+			}
+			result, err := svc.CreateImage(input)
+			if err != nil {
+				log.Fatal("error in creating image")
+			}
+			fmt.Println(result)
+		}
+	}
+
+	fmt.Println(resp.Reservations)
 
 }
