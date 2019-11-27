@@ -17,7 +17,7 @@ func main() {
 		Config:            aws.Config{Region: aws.String("ap-southeast-2")},
 		SharedConfigState: session.SharedConfigEnable,
 	}))
-	cred := credentials.NewStaticCredentials("AKIARWXENY46J4XV2HOS", "9zDEqfJw+F6lGDda5uV0dvk9/MSr+x5mmVKnszhd", "")
+	cred := credentials.NewStaticCredentials("", "", "")
 	_, err := cred.Get()
 	if err != nil {
 		fmt.Println(err)
